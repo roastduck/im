@@ -4,6 +4,7 @@
 #include <cassert>
 #include <string>
 #include <memory>
+#include <iostream>
 #include <unordered_map>
 #include <unistd.h>
 #include <arpa/inet.h>
@@ -82,11 +83,23 @@ inline void Conn::wait(const Callback &callback)
                 {
                     epoll_ctl(epollFd, EPOLL_CTL_DEL, fd, NULL);
                     contexts.erase(fd);
+                    close(fd);
                     continue;
                 }
-                context.addBytes(msg, len);
+                try
+                {
+                    context.addBytes(msg, len);
+                } catch (const InvalidMessage &e)
+                {
+                    std::clog << "Invalid message: " << e.what() << std::endl;
+                    epoll_ctl(epollFd, EPOLL_CTL_DEL, fd, NULL);
+                    contexts.erase(fd);
+                    close(fd);
+                    continue;
+                }
 
-                callback(context);
+                if (context.isAvail())
+                    callback(context);
             }
     }
 }
