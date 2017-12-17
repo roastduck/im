@@ -3,9 +3,7 @@
 
 #include <cassert>
 #include <string>
-#include <memory>
 #include <iostream>
-#include <unordered_map>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
@@ -21,7 +19,6 @@ class Conn
 {
 private:
     int listenFd, epollFd;
-    std::unordered_map< int, std::unique_ptr<Context> > contexts;
 
 public:
     /** Setup listening on a TCP port
@@ -70,11 +67,11 @@ inline void Conn::wait(const Callback &callback)
                 if (!~epoll_ctl(epollFd, EPOLL_CTL_ADD, connFd, &event))
                     throw NetworkError("Cannot add to epoll");
 
-                contexts[connFd] = std::unique_ptr<Context>(new Context(connFd, ip, port));
+                Context::add(connFd, ip, port);
             } else
             {
                 const int fd = events[i].data.fd;
-                Context &context = *contexts.at(fd);
+                Context &context = Context::getByFd(fd);
 
                 int len = read(fd, msg, sizeof(msg));
                 if (!~len)
@@ -82,24 +79,24 @@ inline void Conn::wait(const Callback &callback)
                 if (!len) // EOF
                 {
                     epoll_ctl(epollFd, EPOLL_CTL_DEL, fd, NULL);
-                    contexts.erase(fd);
-                    close(fd);
-                    continue;
-                }
-                try
-                {
-                    context.addBytes(msg, len);
-                } catch (const InvalidMessage &e)
-                {
-                    std::clog << "Invalid message: " << e.what() << std::endl;
-                    epoll_ctl(epollFd, EPOLL_CTL_DEL, fd, NULL);
-                    contexts.erase(fd);
+                    Context::del(fd);
                     close(fd);
                     continue;
                 }
 
-                if (context.isAvail())
-                    callback(context);
+                try
+                {
+                    context.addBytes(msg, len);
+                    if (context.isAvail())
+                        callback(context);
+                } catch (const InvalidMessage &e)
+                {
+                    std::clog << "Invalid message: " << e.what() << std::endl;
+                    epoll_ctl(epollFd, EPOLL_CTL_DEL, fd, NULL);
+                    Context::del(fd);
+                    close(fd);
+                    continue;
+                }
             }
     }
 }
