@@ -1,0 +1,8 @@
+# CMake temporary files
+CMakeCache.txt
+CMakeFiles
+*.cmake
+Makefile
+
+# Executable
+/bin
