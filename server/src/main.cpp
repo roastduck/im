@@ -83,7 +83,7 @@ int main()
                         signUp(msg["name"], msg["password"]);
                         context.send(Json({{"register", "ok"}}).dump());
                         std::clog << "Registered " << msg["name"] << std::endl;
-                    }
+                    } else
                     if (msg["cmd"] == "login")
                     {
                         if (!context.getUser().empty())
@@ -95,47 +95,51 @@ int main()
                             {"contact", users.at(msg["name"]).contacts}
                         }).dump());
                         std::clog << msg["name"] << " logged in" << std::endl;
-                    }
-                    if (msg["cmd"] == "contact")
+                    } else
                     {
-                        User &me = users.at(context.getUser());
-                        if (!users.count(msg["name"]))
-                            throw CmdFailed("Contact: No such user");
-                        if (msg["op"] == "add")
+                        if (context.getUser().empty())
+                            throw CmdFailed("Failed: You have not been logged in");
+                        if (msg["cmd"] == "contact")
                         {
-                            me.contacts.push_back(msg["name"]);
-                            context.send(Json({{"contact", "ok"}}).dump());
-                            std::clog << me.name << " added contact " << msg["name"] << std::endl;
+                            User &me = users.at(context.getUser());
+                            if (!users.count(msg["name"]))
+                                throw CmdFailed("Contact: No such user");
+                            if (msg["op"] == "add")
+                            {
+                                me.contacts.push_back(msg["name"]);
+                                context.send(Json({{"contact", "ok"}}).dump());
+                                std::clog << me.name << " added contact " << msg["name"] << std::endl;
+                            }
+                            if (msg["op"] == "del")
+                            {
+                                me.contacts.erase(
+                                    std::remove(me.contacts.begin(), me.contacts.end(), msg["name"]),
+                                    me.contacts.end()
+                                );
+                                context.send(Json({{"contact", "ok"}}).dump());
+                                std::clog << me.name << " deleted contact " << msg["name"] << std::endl;
+                            }
                         }
-                        if (msg["op"] == "del")
+                        if (msg["cmd"] == "chat")
                         {
-                            me.contacts.erase(
-                                std::remove(me.contacts.begin(), me.contacts.end(), msg["name"]),
-                                me.contacts.end()
-                            );
-                            context.send(Json({{"contact", "ok"}}).dump());
-                            std::clog << me.name << " deleted contact " << msg["name"] << std::endl;
+                            if (!users.count(msg["name"]))
+                                throw CmdFailed("Chat: No such user");
+                            User &from = users.at(context.getUser());
+                            User &to = users.at(msg["name"]);
+                            int id = messages.size();
+                            messages.push_back({time(0), from.name, to.name, msg["message"]});
+                            from.messages.push_back(id);
+                            to.messages.push_back(id);
+                            for (Context *c : Context::getByUser(to.name))
+                                c->send(Json({{"income", {messages.at(id)}}}).dump());
+                            context.send(Json({{"chat", "ok"}}).dump());
+                            std::clog << "Received message from " << from.name << " to " << to.name << std::endl;
                         }
-                    }
-                    if (msg["cmd"] == "chat")
-                    {
-                        if (!users.count(msg["name"]))
-                            throw CmdFailed("Chat: No such user");
-                        User &from = users.at(context.getUser());
-                        User &to = users.at(msg["name"]);
-                        int id = messages.size();
-                        messages.push_back({time(0), from.name, to.name, msg["message"]});
-                        from.messages.push_back(id);
-                        to.messages.push_back(id);
-                        for (Context *c : Context::getByUser(to.name))
-                            c->send(Json({{"income", {messages.at(id)}}}).dump());
-                        context.send(Json({{"chat", "ok"}}).dump());
-                        std::clog << "Received message from " << from.name << " to " << to.name << std::endl;
-                    }
-                    if (msg["cmd"] == "log")
-                    {
-                        context.send(Json(getLogSince(context.getUser(), msg["since"])).dump());
-                        std::clog << "Returned log to " << context.getUser() << std::endl;
+                        if (msg["cmd"] == "log")
+                        {
+                            context.send(Json(getLogSince(context.getUser(), msg["since"])).dump());
+                            std::clog << "Returned log to " << context.getUser() << std::endl;
+                        }
                     }
                 } catch (const CmdFailed &e)
                 {
