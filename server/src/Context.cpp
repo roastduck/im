@@ -55,6 +55,7 @@ void Context::addBytes(const char *bytes, int len)
             if (escaping)
             {
                 escaping = false;
+                std::clog << "  Received: " << buff << std::endl;
                 msgs.push_back(std::move(buff));
                 buff.clear();
                 break;

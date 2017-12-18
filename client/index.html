@@ -1,6 +1,7 @@
 <html ng-app="appIndex">
     <head>
         <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="index.css" />
 		<script>
             window.$ = window.jQuery = require('./node_modules/jquery/dist/jquery.min.js');
             require('./node_modules/bootstrap/dist/js/bootstrap.min.js');
@@ -9,6 +10,58 @@
         </script>
     </head>
     <body ng-controller="IndexController">
+        <div id='toast' style='display:none'></div>
+
+        <div class='vertical-center' ng-if='!loggedIn' style='background-color:#8EE8D6'>
+			<div class='container'>
+				<div class='row'>
+					<div class='col-xs-3'></div>
+                    <div class='col-xs-6'>
+                        <div class='panel panel-info'>
+                            <div class='panel-heading'>
+                                <h3>Log in / Register</h3>
+                            </div>
+                            <form class='panel-body'>
+                                <div class="form-group">
+                                    <label for="ip-in">Server IP</label>
+                                    <input type="text" class="form-control" id="ip-in"
+                                           placeholder="example.com" ng-model='loginForm.ip'
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label for="name-in">Name</label>
+                                    <input type="text" class="form-control" id="name-in"
+                                           placeholder="Mr. Example" ng-model='loginForm.name'
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label for="pwd-in">Password</label>
+                                    <input type="password" class="form-control" id="pwd-in"
+                                           ng-model='loginForm.password'
+                                    />
+                                </div>
+                                <button class="btn btn-danger form-control" ng-click='login()'>
+                                    Log in
+                                </button>
+
+                                <hr />
+
+                                <div class="form-group">
+                                    <label for="rpt-pwd-in">Confirm password</label>
+                                    <input type="password" class="form-control" id="rpt-pwd-in"
+                                           ng-model='loginForm.repeatPwd'
+                                    />
+                                </div>
+                                <button class="btn btn-danger form-control" ng-click='register()'>
+                                    Register
+                                </button>
+                            </form>
+                        </div>
+					</div>
+					<div class='col-xs-3'></div>
+				</div>
+            </div>
+        </div>
     </body>
 </html>
 
