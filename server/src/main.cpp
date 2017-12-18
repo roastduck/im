@@ -86,6 +86,8 @@ int main()
                     }
                     if (msg["cmd"] == "login")
                     {
+                        if (!context.getUser().empty())
+                            throw CmdFailed("Login failed: You are already logged in");
                         login(msg["name"], msg["password"]);
                         context.setUser(msg["name"]);
                         context.send(Json({
