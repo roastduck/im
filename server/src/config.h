@@ -16,5 +16,8 @@ const int EPOLL_NUM_ONE_WAIT = 16; // Assert that EPOLL_NUM_ONE_WAIT <= DEFAULT_
 /// Size of message buffer used to send or receive
 const int MSG_BUF_SIZE = 1024;
 
+/// Max # of logs returned once
+const int MAX_LOG_NUM = 128;
+
 #endif // CONFIG_H_
 

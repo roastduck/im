@@ -1,3 +1,4 @@
+#include <ctime>
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -38,6 +39,32 @@ void login(const std::string &name, const std::string &password)
         throw CmdFailed("Login failed: Wrong password");
 }
 
+/** Get messages since a timestamp
+ *  @return MAX_LOG_NUM logs at maximum
+ */
+std::vector<Message> getLogSince(const std::string &name, time_t since)
+{
+    if (!users.count(name))
+        throw CmdFailed("Get log failed: No such user");
+    const auto &usrMsgs = users.at(name).messages;
+    int l = 0, r = usrMsgs.size();
+    while (l < r)
+    {
+        int mid = (l + r) / 2;
+        if (messages.at(usrMsgs.at(mid)).timestamp < since)
+            l = mid + 1;
+        else
+            r = mid;
+    }
+    assert(l == int(usrMsgs.size()) || messages.at(usrMsgs.at(l)).timestamp >= since);
+    assert(l == 0 || messages.at(usrMsgs.at(l - 1)).timestamp < since);
+    std::vector<Message> ret;
+    ret.reserve(MAX_LOG_NUM);
+    for (int i = 0; i < MAX_LOG_NUM && l + i < int(usrMsgs.size()); i++)
+        ret.push_back(messages.at(usrMsgs.at(l + i)));
+    return ret;
+}
+
 int main()
 {
     Conn conn(PORT);
@@ -74,6 +101,7 @@ int main()
                         {
                             me.contacts.push_back(msg["name"]);
                             context.send(Json({{"contact", "ok"}}).dump());
+                            std::clog << me.name << " added contact " << msg["name"] << std::endl;
                         }
                         if (msg["op"] == "del")
                         {
@@ -82,7 +110,28 @@ int main()
                                 me.contacts.end()
                             );
                             context.send(Json({{"contact", "ok"}}).dump());
+                            std::clog << me.name << " deleted contact " << msg["name"] << std::endl;
                         }
+                    }
+                    if (msg["cmd"] == "chat")
+                    {
+                        if (!users.count(msg["name"]))
+                            throw CmdFailed("Chat: No such user");
+                        User &from = users.at(context.getUser());
+                        User &to = users.at(msg["name"]);
+                        int id = messages.size();
+                        messages.push_back({time(0), from.name, to.name, msg["message"]});
+                        from.messages.push_back(id);
+                        to.messages.push_back(id);
+                        for (Context *c : Context::getByUser(to.name))
+                            c->send(Json({{"income", {messages.at(id)}}}).dump());
+                        context.send(Json({{"chat", "ok"}}).dump());
+                        std::clog << "Received message from " << from.name << " to " << to.name << std::endl;
+                    }
+                    if (msg["cmd"] == "log")
+                    {
+                        context.send(Json(getLogSince(context.getUser(), msg["since"])).dump());
+                        std::clog << "Returned log to " << context.getUser() << std::endl;
                     }
                 } catch (const CmdFailed &e)
                 {
