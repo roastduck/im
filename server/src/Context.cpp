@@ -70,3 +70,9 @@ void Context::addBytes(const char *bytes, int len)
         }
 }
 
+void Context::send(const std::string &_msg)
+{
+    std::string msg = _msg + "$.\n";
+    write(fd, msg.c_str(), msg.length());
+}
+

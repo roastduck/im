@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include <unordered_map>
 #include "User.h"
 #include "Conn.h"
@@ -51,13 +52,37 @@ int main()
                     if (msg["cmd"] == "register")
                     {
                         signUp(msg["name"], msg["password"]);
+                        context.send(Json({{"register", "ok"}}).dump());
                         std::clog << "Registered " << msg["name"] << std::endl;
                     }
                     if (msg["cmd"] == "login")
                     {
                         login(msg["name"], msg["password"]);
                         context.setUser(msg["name"]);
+                        context.send(Json({
+                            {"login", "ok"},
+                            {"contact", users.at(msg["name"]).contacts}
+                        }).dump());
                         std::clog << msg["name"] << " logged in" << std::endl;
+                    }
+                    if (msg["cmd"] == "contact")
+                    {
+                        User &me = users.at(context.getUser());
+                        if (!users.count(msg["name"]))
+                            throw CmdFailed("Contact: No such user");
+                        if (msg["op"] == "add")
+                        {
+                            me.contacts.push_back(msg["name"]);
+                            context.send(Json({{"contact", "ok"}}).dump());
+                        }
+                        if (msg["op"] == "del")
+                        {
+                            me.contacts.erase(
+                                std::remove(me.contacts.begin(), me.contacts.end(), msg["name"]),
+                                me.contacts.end()
+                            );
+                            context.send(Json({{"contact", "ok"}}).dump());
+                        }
                     }
                 } catch (const CmdFailed &e)
                 {

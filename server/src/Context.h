@@ -59,7 +59,7 @@ public:
 
     /** Send message
      */
-    void send(const std::string &msg) { write(fd, (msg + "$.").c_str(), msg.length() + 2); }
+    void send(const std::string &_msg);
 };
 
 #endif // CONTEXT_H_
