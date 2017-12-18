@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "main": "main.js",
   "dependencies": {
+    "angular": "^1.6.7",
     "bootstrap": "^3.3.7",
     "electron": "^1.7.9",
     "jquery": "^3.2.1"
