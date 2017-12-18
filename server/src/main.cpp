@@ -23,6 +23,8 @@ void signUp(const std::string &name, const std::string &password)
 {
     if (users.count(name))
         throw CmdFailed("Register failed: Name already in use");
+    if (name.empty())
+        throw CmdFailed("Register failed: Name can't be empty");
     if (password.empty())
         throw CmdFailed("Register failed: Password can't be empty");
     users[name] = (User){name, password, {}, {}};
