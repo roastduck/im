@@ -24,6 +24,7 @@ angular.module('appIndex', [])
             input: ""
         };
         const curLoginForm = {};
+        let latest = 0; // Latest timestamp received
 
         const toast = function(msg) {
             $('#toast').text(msg);
@@ -50,6 +51,7 @@ angular.module('appIndex', [])
                         $scope.loggedIn = true;
                         $scope.$apply();
                     }
+                    sync();
                     break;
                 case "register":
                     if (response[key] == "ok")
@@ -65,6 +67,7 @@ angular.module('appIndex', [])
                 case "income":
                     for (let i in response[key]) {
                         const msg = response[key][i];
+                        latest = msg.timestamp + 1 > latest ? msg.timestamp + 1 : latest;
                         let people = msg.from == curLoginForm.name ? msg.to : msg.from;
                         if ($scope.log[people] === undefined)
                             $scope.log[people] = [];
@@ -75,9 +78,16 @@ angular.module('appIndex', [])
                         $scope.$apply();
                     }
                     break;
+                case "log":
+                    if (response[key] == "more")
+                        sync();
+                    break;
                 }
         }
 
+        function sync() {
+            send({cmd: 'log', since: latest});
+        };
         function login() {
             send({cmd: 'login', name: curLoginForm.name, password: curLoginForm.password});
         };

@@ -74,6 +74,8 @@ std::vector<Message> getLogSince(const std::string &name, time_t since)
 const std::vector<std::string> &updContact(const std::string &myName, const std::string &op, const std::string &name)
 {
     User &me = users.at(myName);
+    if (name == myName)
+        throw CmdFailed("Contact: Contact can't be yourself");
     if (!users.count(name))
         throw CmdFailed("Contact: No such user");
     if (op == "add")
@@ -152,8 +154,10 @@ int main()
                         }
                         if (msg["cmd"] == "log")
                         {
+                            auto log = getLogSince(context.getUser(), msg["since"]);
                             context.send(Json({
-                                {"income", getLogSince(context.getUser(), msg["since"])}
+                                {"income", log},
+                                {"log", log.empty() ? "fin" : "more"}
                             }).dump());
                             std::clog << "Returned log to " << context.getUser() << std::endl;
                         }
