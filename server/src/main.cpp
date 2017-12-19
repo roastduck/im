@@ -67,6 +67,32 @@ std::vector<Message> getLogSince(const std::string &name, time_t since)
     return ret;
 }
 
+/** Update contacts of user `myName`
+ *  @param op : "add" or "del"
+ *  @return : Updated contacts
+ */
+const std::vector<std::string> &updContact(const std::string &myName, const std::string &op, const std::string &name)
+{
+    User &me = users.at(myName);
+    if (!users.count(name))
+        throw CmdFailed("Contact: No such user");
+    if (op == "add")
+    {
+        if (std::find(me.contacts.begin(), me.contacts.end(), name) != me.contacts.end())
+            throw CmdFailed("Contact: Contact already exists");
+        me.contacts.push_back(name);
+    } else
+    if (op == "del")
+    {
+        me.contacts.erase(
+            std::remove(me.contacts.begin(), me.contacts.end(), name),
+            me.contacts.end()
+        );
+    } else
+        throw CmdFailed("Contact: Unrecognized op " + op);
+    return me.contacts;
+}
+
 int main()
 {
     Conn conn(PORT);
@@ -101,24 +127,10 @@ int main()
                             throw CmdFailed("Failed: You have not been logged in");
                         if (msg["cmd"] == "contact")
                         {
-                            User &me = users.at(context.getUser());
-                            if (!users.count(msg["name"]))
-                                throw CmdFailed("Contact: No such user");
-                            if (msg["op"] == "add")
-                            {
-                                me.contacts.push_back(msg["name"]);
-                                context.send(Json({{"contact", "ok"}}).dump());
-                                std::clog << me.name << " added contact " << msg["name"] << std::endl;
-                            }
-                            if (msg["op"] == "del")
-                            {
-                                me.contacts.erase(
-                                    std::remove(me.contacts.begin(), me.contacts.end(), msg["name"]),
-                                    me.contacts.end()
-                                );
-                                context.send(Json({{"contact", "ok"}}).dump());
-                                std::clog << me.name << " deleted contact " << msg["name"] << std::endl;
-                            }
+                            context.send(Json({
+                                {"contact", updContact(context.getUser(), msg["op"], msg["name"])}
+                            }).dump());
+                            std::clog << context.getUser() << " updated contact " << msg["name"] << std::endl;
                         }
                         if (msg["cmd"] == "chat")
                         {
@@ -137,7 +149,9 @@ int main()
                         }
                         if (msg["cmd"] == "log")
                         {
-                            context.send(Json(getLogSince(context.getUser(), msg["since"])).dump());
+                            context.send(Json({
+                                {"income", getLogSince(context.getUser(), msg["since"])}
+                            }).dump());
                             std::clog << "Returned log to " << context.getUser() << std::endl;
                         }
                     }
