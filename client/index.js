@@ -214,7 +214,7 @@ angular.module('appIndex', [])
         };
 
         $scope.getTime = (timestamp) => {
-            return (new Date(timestamp)).toLocaleString();
+            return (new Date(timestamp * 1000)).toLocaleString();
         };
 
         $scope.switchActive = (name) => {
