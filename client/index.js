@@ -8,11 +8,20 @@ angular.module('appIndex', [])
     .controller('IndexController', ['$scope', ($scope) => {
         let connected = false;
         $scope.loggedIn = false;
-        $scope.loginForm = {
+        $scope.loginForm = { // Placing inputs in an object can effectively avoid the `$parent` issue
             ip: "",
             name: "",
             password: "",
             repeatPwd: ""
+        };
+        $scope.contact = [];
+        $scope.contactForm = {
+            active: "",
+            input: ""
+        };
+        $scope.log = {};
+        $scope.chatForm = {
+            input: ""
         };
         const curLoginForm = {};
 
@@ -48,6 +57,23 @@ angular.module('appIndex', [])
                     break;
                 case "info":
                     toast(response[key]);
+                    break;
+                case "contact":
+                    $scope.contact = response[key];
+                    $scope.$apply();
+                    break;
+                case "income":
+                    for (let i in response[key]) {
+                        const msg = response[key][i];
+                        let people = msg.from == curLoginForm.name ? msg.to : msg.from;
+                        if ($scope.log[people] === undefined)
+                            $scope.log[people] = [];
+                        $scope.log[people].push(msg);
+                    }
+                    for (let people in $scope.log) {
+                        $scope.log[people].sort((lhs, rhs) => { return lhs.timestamp - rhs.timestamp; });
+                        $scope.$apply();
+                    }
                     break;
                 }
         }
@@ -145,5 +171,33 @@ angular.module('appIndex', [])
                 sock.connect(PORT, curLoginForm.ip);
             }
         };
+
+        $scope.send = () => {
+            const target = $scope.contactForm.active;
+            const msg = $scope.chatForm.input;
+            $scope.chatForm.input = "";
+            if ($scope.log[target] === undefined)
+                $scope.log[target] = [];
+            $scope.log[target].push({
+                timestamp: Date.now(),
+                from: curLoginForm.name,
+                to: target,
+                body: msg
+            });
+            send({cmd: "chat", name: target, message: msg});
+        };
+
+        $scope.addContact = () => {
+            const name = $scope.contactForm.input;
+            send({cmd: "contact", op: "add", name: name});
+        };
+
+        $scope.logout = () => {
+            sock.end();
+        };
+
+        $scope.getTime = (timestamp) => {
+            return (new Date(timestamp)).toLocaleString();
+        }
     }]);
 
