@@ -222,5 +222,10 @@ angular.module('appIndex', [])
             if ($scope.unread[name] !== undefined)
                 delete $scope.unread[name];
         };
+
+        $scope.chatKeyPress = (e) => {
+            if (e.shiftKey && e.key == 'Enter')
+                $scope.send();
+        };
     }]);
 

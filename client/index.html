@@ -94,7 +94,8 @@
                                 >
                                     <form>
                                         <textarea id='chat-in' class='col-xs-12 form-control' rows='3'
-                                                  ng-model='chatForm.input'
+                                                  ng-model='chatForm.input' ng-keypress='chatKeyPress($event)'
+                                                  placeholder='Press Shift+Enter to send'
                                         ></textarea>
                                         <span style='background-color:white;width:100%'>
                                             <button class='btn btn-default pull-right' style='margin:3px'
