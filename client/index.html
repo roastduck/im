@@ -50,8 +50,11 @@
                                     ng-repeat='name in contact'
                                 >
                                     <li ng-class='{active:contactForm.active==name}'>
-                                        <a href="#" ng-click='contactForm.active=name'>
+                                        <a href="#" ng-click='switchActive(name)'>
                                             <big><strong style='color:black'>{{name}}</strong></big>
+                                            <span class='badge' ng-if='unread[name]'>
+                                                {{unread[name]}}
+                                            </span>
                                             <button type="button" class="close pull-right" ng-click='delContact(name)'>
                                                 &times;
                                             </button>

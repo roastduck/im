@@ -19,6 +19,7 @@ angular.module('appIndex', [])
             active: "",
             input: ""
         };
+        $scope.unread = {};
         $scope.log = {};
         $scope.chatForm = {
             input: ""
@@ -72,6 +73,8 @@ angular.module('appIndex', [])
                         if ($scope.log[people] === undefined)
                             $scope.log[people] = [];
                         $scope.log[people].push(msg);
+                        if ($scope.contactForm.active != people)
+                            $scope.unread[people] = ($scope.unread[people] === undefined ? 0 : $scope.unread[people]) + 1;
                     }
                     for (let people in $scope.log) {
                         $scope.log[people].sort((lhs, rhs) => { return lhs.timestamp - rhs.timestamp; });
@@ -212,6 +215,12 @@ angular.module('appIndex', [])
 
         $scope.getTime = (timestamp) => {
             return (new Date(timestamp)).toLocaleString();
-        }
+        };
+
+        $scope.switchActive = (name) => {
+            $scope.contactForm.active=name;
+            if ($scope.unread[name] !== undefined)
+                delete $scope.unread[name];
+        };
     }]);
 
