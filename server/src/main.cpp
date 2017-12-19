@@ -130,6 +130,9 @@ int main()
                             context.send(Json({
                                 {"contact", updContact(context.getUser(), msg["op"], msg["name"])}
                             }).dump());
+                            const auto &opposite = updContact(msg["name"], msg["op"], context.getUser());
+                            for (const auto c : Context::getByUser(msg["name"]))
+                                c->send(Json({{"contact", opposite}}).dump());
                             std::clog << context.getUser() << " updated contact " << msg["name"] << std::endl;
                         }
                         if (msg["cmd"] == "chat")
