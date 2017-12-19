@@ -7,25 +7,32 @@ const PORT = 19623;
 angular.module('appIndex', [])
     .controller('IndexController', ['$scope', ($scope) => {
         let connected = false;
-        $scope.loggedIn = false;
-        $scope.loginForm = { // Placing inputs in an object can effectively avoid the `$parent` issue
-            ip: "",
-            name: "",
-            password: "",
-            repeatPwd: ""
-        };
-        $scope.contact = [];
-        $scope.contactForm = {
-            active: "",
-            input: ""
-        };
-        $scope.unread = {};
-        $scope.log = {};
-        $scope.chatForm = {
-            input: ""
-        };
-        const curLoginForm = {};
         let latest = 0; // Latest timestamp received
+        let curLoginForm = {};
+
+        function init() {
+            $scope.loggedIn = false;
+            $scope.loginForm = { // Placing inputs in an object can effectively avoid the `$parent` issue
+                ip: "",
+                name: "",
+                password: "",
+                repeatPwd: ""
+            };
+            $scope.contact = [];
+            $scope.contactForm = {
+                active: "",
+                input: ""
+            };
+            $scope.unread = {};
+            $scope.log = {};
+            $scope.chatForm = {
+                input: ""
+            };
+            connected = false;
+            latest = 0;
+            curLoginForm = {};
+        }
+        init();
 
         const toast = function(msg) {
             $('#toast').text(msg);
@@ -104,8 +111,7 @@ angular.module('appIndex', [])
             toast('ERROR: ' + err.message);
         });
         sock.on('close', (hasError) => {
-            connected = false;
-            $scope.loggedIn = false;
+            init();
             $scope.$apply();
         });
         sock.on('connect', () => {
@@ -192,7 +198,7 @@ angular.module('appIndex', [])
             if ($scope.log[target] === undefined)
                 $scope.log[target] = [];
             $scope.log[target].push({
-                timestamp: Date.now(),
+                timestamp: Date.now() / 1000,
                 from: curLoginForm.name,
                 to: target,
                 body: msg
