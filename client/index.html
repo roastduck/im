@@ -52,6 +52,9 @@
                                     <li ng-class='{active:contactForm.active==name}'>
                                         <a href="#" ng-click='contactForm.active=name'>
                                             <big><strong style='color:black'>{{name}}</strong></big>
+                                            <button type="button" class="close pull-right" ng-click='delContact(name)'>
+                                                &times;
+                                            </button>
                                         </a>
                                     </li>
                                 </ul>

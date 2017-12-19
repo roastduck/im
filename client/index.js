@@ -192,6 +192,10 @@ angular.module('appIndex', [])
             send({cmd: "contact", op: "add", name: name});
         };
 
+        $scope.delContact = (name) => {
+            send({cmd: "contact", op: "del", name: name});
+        };
+
         $scope.logout = () => {
             sock.end();
         };
