@@ -1,6 +1,8 @@
 "use strict"
 
 const net = require('net')
+const fs = require('fs');
+const {dialog} = require('electron').remote;
 
 const PORT = 19623;
 
@@ -127,7 +129,7 @@ angular.module('appIndex', [])
                                         ($scope.unread[people] === undefined ? 0 : $scope.unread[people]) + 1;
                             }
                             const sum = fileRecv[people][msg.body.id];
-                            msg.body.data = atob(msg.body.data);
+                            msg.body.data = [...atob(msg.body.data)].map(c => c.charCodeAt(0));
                             for (let i = 0; i < msg.body.data.length; i++)
                                 if (sum.body.blob[i + msg.body.start] === undefined) {
                                     // Same timestamp can cause re-transmission
@@ -263,14 +265,14 @@ angular.module('appIndex', [])
                                 filename: filename,
                                 start: start,
                                 size: size,
-                                data: btoa(e.target.result)
+                                data: btoa(String.fromCharCode(...new Uint8Array(e.target.result)))
                             })});
                             bytesSent += stop - start;
                             $scope.$apply();
                         };
                     })(target, curFile.name, curFileId, i, stop, curFile.size);
                     const blob = curFile.slice(i, stop);
-                    reader.readAsBinaryString(blob);
+                    reader.readAsArrayBuffer(blob);
                 }
                 msgs.push({
                     type: "file",
@@ -329,8 +331,18 @@ angular.module('appIndex', [])
         let curFileId = 0;
         let curFile = null;
         $scope.addFile = (e) => {
-            curFileId += 1;
+            curFileId = Date.now() * 100 + Math.round(Math.random() * 100);
             curFile = e.target.files[0];
+        };
+        $scope.saveFile = (f) => {
+            dialog.showSaveDialog({defaultPath: f.filename}, (filename) => {
+                fs.writeFile(filename, new Buffer(f.blob), (err) => {
+                    if (err)
+                        toast("Cannot save to " + filename);
+                    else
+                        toast("File " + filename + " saved");
+                });
+            });
         };
     }]);
 
