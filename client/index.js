@@ -5,10 +5,31 @@ const net = require('net')
 const PORT = 19623;
 
 angular.module('appIndex', [])
+    .directive('fileChange', () => {
+        return {
+            restrict: 'A',
+            scope: {
+                fileChange: '&'
+            },
+            link: function link(scope, element, attrs, ctrl) {
+                element.on('change', onChange);
+
+                scope.$on('destroy', function () {
+                    element.off('change', onChange);
+                });
+
+                function onChange(e) {
+                    scope.fileChange({$event:e}); // call expression in file-change
+                    scope.$apply();
+                }
+            }
+        };
+    })
     .controller('IndexController', ['$scope', ($scope) => {
         let connected = false;
         let latest = 0; // Latest timestamp received
         let curLoginForm = {};
+        let fileRecv = {};
 
         function init() {
             $scope.loggedIn = false;
@@ -31,6 +52,7 @@ angular.module('appIndex', [])
             connected = false;
             latest = 0;
             curLoginForm = {};
+            fileRecv = {};
         }
         init();
 
@@ -75,18 +97,50 @@ angular.module('appIndex', [])
                 case "income":
                     for (let i in response[key]) {
                         const msg = response[key][i];
+                        msg.body = JSON.parse(msg.body);
                         latest = msg.timestamp + 1 > latest ? msg.timestamp + 1 : latest;
                         let people = msg.from == curLoginForm.name ? msg.to : msg.from;
                         if ($scope.log[people] === undefined)
                             $scope.log[people] = [];
-                        $scope.log[people].push(msg);
-                        if ($scope.contactForm.active != people)
-                            $scope.unread[people] = ($scope.unread[people] === undefined ? 0 : $scope.unread[people]) + 1;
+                        if (msg.body.type == "text") {
+                            $scope.log[people].push(msg);
+                            if ($scope.contactForm.active != people)
+                                $scope.unread[people] =
+                                    ($scope.unread[people] === undefined ? 0 : $scope.unread[people]) + 1;
+                        }
+                        if (msg.body.type == "file") {
+                            if (fileRecv[people] === undefined)
+                                fileRecv[people] = {};
+                            if (fileRecv[people][msg.body.id] === undefined) {
+                                msg.body.blob = [];
+                                msg.body.recvCnt = 0;
+                                msg.body.progress = function() { // NOTE: `() => {}` function has different `this` machanism
+                                    return Math.round(this.recvCnt / this.size * 100) + '%';
+                                };
+                                msg.body.ready = function() {
+                                    return this.recvCnt == this.size;
+                                };
+                                fileRecv[people][msg.body.id] = msg;
+                                $scope.log[people].push(msg); // Create reference
+                                if ($scope.contactForm.active != people)
+                                    $scope.unread[people] =
+                                        ($scope.unread[people] === undefined ? 0 : $scope.unread[people]) + 1;
+                            }
+                            const sum = fileRecv[people][msg.body.id];
+                            msg.body.data = atob(msg.body.data);
+                            for (let i = 0; i < msg.body.data.length; i++)
+                                if (sum.body.blob[i + msg.body.start] === undefined) {
+                                    // Same timestamp can cause re-transmission
+                                    sum.body.blob[i + msg.body.start] = msg.body.data[i];
+                                    sum.body.recvCnt ++;
+                                }
+                            delete msg.body.start;
+                            delete msg.body.data;
+                        }
                     }
-                    for (let people in $scope.log) {
+                    for (let people in $scope.log)
                         $scope.log[people].sort((lhs, rhs) => { return lhs.timestamp - rhs.timestamp; });
-                        $scope.$apply();
-                    }
+                    $scope.$apply();
                     break;
                 case "log":
                     if (response[key] == "more")
@@ -193,17 +247,55 @@ angular.module('appIndex', [])
 
         $scope.send = () => {
             const target = $scope.contactForm.active;
-            const msg = $scope.chatForm.input;
-            $scope.chatForm.input = "";
+            const msgs = [];
+
+            if (curFile) {
+                const BLOCK_SIZE = 4096;
+                let bytesSent = 0;
+                for (let i = 0; i < curFile.size; i += BLOCK_SIZE) {
+                    const reader = new FileReader();
+                    const stop = i + BLOCK_SIZE < curFile.size ? i + BLOCK_SIZE : curFile.size;
+                    reader.onload = ((target, filename, id, start, stop, size) => {
+                        return (e) => {
+                            send({cmd: "chat", name: target, message: JSON.stringify({
+                                type: "file",
+                                id: id,
+                                filename: filename,
+                                start: start,
+                                size: size,
+                                data: btoa(e.target.result)
+                            })});
+                            bytesSent += stop - start;
+                            $scope.$apply();
+                        };
+                    })(target, curFile.name, curFileId, i, stop, curFile.size);
+                    const blob = curFile.slice(i, stop);
+                    reader.readAsBinaryString(blob);
+                }
+                msgs.push({
+                    type: "file",
+                    filename: curFile.name,
+                    progress: () => { return Math.round(bytesSent / curFile.size * 100) + "%"; },
+                    ready: () => { return false; }
+                });
+            }
+
+            if ($scope.chatForm.input) {
+                const msg = {type:"text", data:$scope.chatForm.input};
+                send({cmd: "chat", name: target, message: JSON.stringify(msg)});
+                msgs.push(msg);
+                $scope.chatForm.input = "";
+            }
+
             if ($scope.log[target] === undefined)
                 $scope.log[target] = [];
-            $scope.log[target].push({
-                timestamp: Date.now() / 1000,
-                from: curLoginForm.name,
-                to: target,
-                body: msg
-            });
-            send({cmd: "chat", name: target, message: msg});
+            for (let i in msgs)
+                $scope.log[target].push({
+                    timestamp: Date.now() / 1000,
+                    from: curLoginForm.name,
+                    to: target,
+                    body: msgs[i]
+                });
         };
 
         $scope.addContact = () => {
@@ -232,6 +324,13 @@ angular.module('appIndex', [])
         $scope.chatKeyPress = (e) => {
             if (e.shiftKey && e.key == 'Enter')
                 $scope.send();
+        };
+
+        let curFileId = 0;
+        let curFile = null;
+        $scope.addFile = (e) => {
+            curFileId += 1;
+            curFile = e.target.files[0];
         };
     }]);
 
