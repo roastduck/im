@@ -42,7 +42,7 @@ void login(const std::string &name, const std::string &password)
 }
 
 /** Get messages since a timestamp
- *  @return MAX_LOG_NUM logs at maximum
+ *  @return MAX_LOG_NUM logs at maximum, except that there are same timestamps
  */
 std::vector<Message> getLogSince(const std::string &name, time_t since)
 {
@@ -62,8 +62,12 @@ std::vector<Message> getLogSince(const std::string &name, time_t since)
     assert(l == 0 || messages.at(usrMsgs.at(l - 1)).timestamp < since);
     std::vector<Message> ret;
     ret.reserve(MAX_LOG_NUM);
-    for (int i = 0; i < MAX_LOG_NUM && l + i < int(usrMsgs.size()); i++)
+    for (int i = 0; l + i < int(usrMsgs.size()); i++)
+    {
+        if (i >= MAX_LOG_NUM && messages.at(usrMsgs.at(l + i)).timestamp != messages.at(usrMsgs.at(l + i - 1)).timestamp)
+            break;
         ret.push_back(messages.at(usrMsgs.at(l + i)));
+    }
     return ret;
 }
 
