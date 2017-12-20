@@ -27,7 +27,7 @@ angular.module('appIndex', [])
             }
         };
     })
-    .controller('IndexController', ['$scope', ($scope) => {
+    .controller('IndexController', ['$scope', '$timeout', ($scope, $timeout) => {
         let connected = false;
         let latest = 0; // Latest timestamp received
         let curLoginForm = {};
@@ -198,14 +198,18 @@ angular.module('appIndex', [])
                 case '.':
                     if (escaping) {
                         escaping = false;
-                        try {
-                            dispatch(JSON.parse(buf));
-                        } catch (e) {
-                            if (e instanceof SyntaxError)
-                                toast('ERROR: invalid response (2)');
-                            else
-                                throw e;
-                        }
+                        $timeout(((buf) => {
+                            return () => {
+                                try {
+                                    dispatch(JSON.parse(buf));
+                                } catch (e) {
+                                    if (e instanceof SyntaxError)
+                                        toast('ERROR: invalid response (2)');
+                                    else
+                                        throw e;
+                                }
+                            };
+                        })(buf));
                         buf = "";
                         break;
                     }
@@ -277,9 +281,11 @@ angular.module('appIndex', [])
                 msgs.push({
                     type: "file",
                     filename: curFile.name,
-                    progress: () => { return Math.round(bytesSent / curFile.size * 100) + "%"; },
+                    size: curFile.size,
+                    progress: function() { return Math.round(bytesSent / this.size * 100) + "%"; },
                     ready: () => { return false; }
                 });
+                curFileEvent.target.value = '';
             }
 
             if ($scope.chatForm.input) {
@@ -330,9 +336,15 @@ angular.module('appIndex', [])
 
         let curFileId = 0;
         let curFile = null;
+        let curFileEvent = null;
         $scope.addFile = (e) => {
-            curFileId = Date.now() * 100 + Math.round(Math.random() * 100);
-            curFile = e.target.files[0];
+            curFileEvent = e;
+            if (e.target.value.length == 0)
+                curFile = null;
+            else {
+                curFileId = Date.now() * 100 + Math.round(Math.random() * 100);
+                curFile = e.target.files[0];
+            }
         };
         $scope.saveFile = (f) => {
             dialog.showSaveDialog({defaultPath: f.filename}, (filename) => {
