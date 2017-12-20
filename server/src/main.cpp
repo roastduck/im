@@ -12,6 +12,7 @@
 #include "exception/CmdFailed.h"
 
 std::unordered_map<std::string, User> users;
+std::unordered_map<std::string, std::string> profiles;
 std::vector<Message> messages;
 
 using Json = nlohmann::json;
@@ -124,7 +125,8 @@ int main()
                         context.setUser(msg["name"]);
                         context.send(Json({
                             {"login", "ok"},
-                            {"contact", users.at(msg["name"]).contacts}
+                            {"contact", users.at(msg["name"]).contacts},
+                            {"profile", profiles}
                         }).dump());
                         std::clog << msg["name"] << " logged in" << std::endl;
                     } else
@@ -164,6 +166,11 @@ int main()
                                 {"log", log.empty() ? "fin" : "more"}
                             }).dump());
                             std::clog << "Returned log to " << context.getUser() << std::endl;
+                        }
+                        if (msg["cmd"] == "profile")
+                        {
+                            profiles[context.getUser()] = msg["data"];
+                            std::clog << "Updated profile of " << context.getUser() << std::endl;
                         }
                     }
                 } catch (const CmdFailed &e)

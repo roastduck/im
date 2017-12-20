@@ -51,6 +51,7 @@ angular.module('appIndex', [])
             $scope.chatForm = {
                 input: ""
             };
+            $scope.avatar = {};
             connected = false;
             latest = 0;
             curLoginForm = {};
@@ -147,6 +148,10 @@ angular.module('appIndex', [])
                 case "log":
                     if (response[key] == "more")
                         sync();
+                    break;
+                case "profile":
+                    $scope.avatar = response[key];
+                    $scope.$apply();
                     break;
                 }
         }
@@ -355,6 +360,33 @@ angular.module('appIndex', [])
                         toast("File " + filename + " saved");
                 });
             });
+        };
+
+        $scope.changeAvatar = () => {
+            const filenames = dialog.showOpenDialog({
+                filters: [{name: 'Images', extensions: ['jpg', 'jpeg', 'png']}],
+                properties: ['openFile']
+            });
+            if (!filenames)
+                return;
+            let prefix = '';
+            if (filenames[0].endsWith(".jpg") || filenames[0].endsWith(".jpeg"))
+                prefix = "data:image/jpeg;base64,";
+            else
+                prefix = "data:image/png;base64,";
+            fs.readFile(filenames[0], (err, data) => {
+                if (err) {
+                    toast("Error reading image");
+                    return;
+                }
+                const img = prefix + data.toString('base64')
+                $scope.avatar[curLoginForm.name] = img;
+                send({cmd: 'profile', data: img});
+                $scope.$apply();
+            });
+        };
+        $scope.getAvatar = () => {
+            return curLoginForm.name ? $scope.avatar[curLoginForm.name] : '';
         };
     }]);
 

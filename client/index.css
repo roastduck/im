@@ -46,3 +46,13 @@
     margin-right:-30px;
 }
 
+.side-btn {
+    padding: 1px;
+    text-align: center;
+    font-size: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width:45px;
+    height:45px;
+}
+

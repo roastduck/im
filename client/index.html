@@ -14,7 +14,16 @@
 
         <div class='container-fluid' ng-if='loggedIn'>
             <div class='row' style='height:100%'>
-                <div class='col-xs-4' style='background-color:#B2FFFF;height:100%'>
+                <div class='col-xs-1' style='background-color:#262A2F;height:100%'>
+                    <a href='#' class='thumbnail side-btn' ng-click='changeAvatar()'>
+                        <img ng-if='getAvatar()' src='{{getAvatar()}}' />
+                        <span class="glyphicon glyphicon-user" ng-if='!getAvatar()'></span>
+                    </a>
+                    <button class="btn btn-default side-btn" ng-click='logout()' style='position:absolute;bottom:10px'>
+                        <span class="glyphicon glyphicon-log-out"></span>
+                    </button>
+                </div>
+                <div class='col-xs-3' style='background-color:#B2FFFF;height:100%'>
                     <div class='container-fluid'>
                         <div class='row'>
                             <div class='col-xs-12'>
@@ -32,13 +41,6 @@
                                                 <span class="glyphicon glyphicon-plus"></span>
                                                 &#8203;
                                             </button>
-                                            <button class="btn btn-default" ng-click='logout()'
-                                                    style='padding-left:10px;padding-right:10px'
-                                            >
-                                                &#8203;
-                                                <span class="glyphicon glyphicon-log-out"></span>
-                                                &#8203;
-                                            </button>
                                         </div>
                                     </div>
                                 </form>
@@ -51,13 +53,18 @@
                                 >
                                     <li ng-class='{active:contactForm.active==name}'>
                                         <a href="#" ng-click='switchActive(name)'>
-                                            <big><strong style='color:black'>{{name}}</strong></big>
-                                            <span class='badge' ng-if='unread[name]'>
-                                                {{unread[name]}}
+                                            <span class='col-xs-1 side-btn thumbnail' style='margin:0px'>
+                                                <img ng-if='avatar[name]' src='{{avatar[name]}}' />
                                             </span>
-                                            <button type="button" class="close pull-right" ng-click='delContact(name)'>
-                                                &times;
-                                            </button>
+                                            <span class='col-xs-offset-1' style='font-size:30px'>
+                                                <strong style='color:black'>{{name}}</strong>
+                                                <span class='badge' ng-if='unread[name]'>
+                                                    {{unread[name]}}
+                                                </span>
+                                                <button type="button" class="close pull-right" ng-click='delContact(name)'>
+                                                    &times;
+                                                </button>
+                                            </span>
                                         </a>
                                     </li>
                                 </ul>
