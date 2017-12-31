@@ -1,0 +1,104 @@
+\hypertarget{classConn}{}\section{Conn Class Reference}
+\label{classConn}\index{Conn@{Conn}}
+
+
+Connection manager.  
+
+
+
+
+{\ttfamily \#include $<$Conn.\+h$>$}
+
+
+
+Collaboration diagram for Conn\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=141pt]{classConn__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classConn_a7312553a7ce3efd712427ccd5a0106c6}{Conn} (unsigned short port)
+\begin{DoxyCompactList}\small\item\em Setup listening on a T\+CP port. \end{DoxyCompactList}\item 
+\hyperlink{classConn_a45fa096c27a1cdbeb295c903045ce071}{$\sim$\+Conn} ()
+\begin{DoxyCompactList}\small\item\em Close the file descriptors. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class Callback $>$ }\\void \hyperlink{classConn_a1c06e5cf18d612c261b49198c99fa0d6}{wait} (const Callback \&callback)
+\begin{DoxyCompactList}\small\item\em Wait until a connection is readable This will block the thread forever. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{classConn_a6af8be63a2c2649023fab93fa45f166a}{listen\+Fd}
+\item 
+int \hyperlink{classConn_a74f55eff092314212ed765eebe2022d5}{epoll\+Fd}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Connection manager. 
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Conn@{Conn}!Conn@{Conn}}
+\index{Conn@{Conn}!Conn@{Conn}}
+\subsubsection[{\texorpdfstring{Conn(unsigned short port)}{Conn(unsigned short port)}}]{\setlength{\rightskip}{0pt plus 5cm}Conn\+::\+Conn (
+\begin{DoxyParamCaption}
+\item[{unsigned short}]{port}
+\end{DoxyParamCaption}
+)}\hypertarget{classConn_a7312553a7ce3efd712427ccd5a0106c6}{}\label{classConn_a7312553a7ce3efd712427ccd5a0106c6}
+
+
+Setup listening on a T\+CP port. 
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \hyperlink{classNetworkError}{Network\+Error}} & \\
+\hline
+\end{DoxyExceptions}
+\index{Conn@{Conn}!````~Conn@{$\sim$\+Conn}}
+\index{````~Conn@{$\sim$\+Conn}!Conn@{Conn}}
+\subsubsection[{\texorpdfstring{$\sim$\+Conn()}{~Conn()}}]{\setlength{\rightskip}{0pt plus 5cm}Conn\+::$\sim$\+Conn (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classConn_a45fa096c27a1cdbeb295c903045ce071}{}\label{classConn_a45fa096c27a1cdbeb295c903045ce071}
+
+
+Close the file descriptors. 
+
+
+
+\subsection{Member Function Documentation}
+\index{Conn@{Conn}!wait@{wait}}
+\index{wait@{wait}!Conn@{Conn}}
+\subsubsection[{\texorpdfstring{wait(const Callback \&callback)}{wait(const Callback &callback)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Callback $>$ void Conn\+::wait (
+\begin{DoxyParamCaption}
+\item[{const Callback \&}]{callback}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classConn_a1c06e5cf18d612c261b49198c99fa0d6}{}\label{classConn_a1c06e5cf18d612c261b49198c99fa0d6}
+
+
+Wait until a connection is readable This will block the thread forever. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & \+: function(\+Context \&context) \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Data Documentation}
+\index{Conn@{Conn}!epoll\+Fd@{epoll\+Fd}}
+\index{epoll\+Fd@{epoll\+Fd}!Conn@{Conn}}
+\subsubsection[{\texorpdfstring{epoll\+Fd}{epollFd}}]{\setlength{\rightskip}{0pt plus 5cm}int Conn\+::epoll\+Fd\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classConn_a74f55eff092314212ed765eebe2022d5}{}\label{classConn_a74f55eff092314212ed765eebe2022d5}
+\index{Conn@{Conn}!listen\+Fd@{listen\+Fd}}
+\index{listen\+Fd@{listen\+Fd}!Conn@{Conn}}
+\subsubsection[{\texorpdfstring{listen\+Fd}{listenFd}}]{\setlength{\rightskip}{0pt plus 5cm}int Conn\+::listen\+Fd\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classConn_a6af8be63a2c2649023fab93fa45f166a}{}\label{classConn_a6af8be63a2c2649023fab93fa45f166a}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{Conn_8h}{Conn.\+h}\item 
+\hyperlink{Conn_8cpp}{Conn.\+cpp}\end{DoxyCompactItemize}

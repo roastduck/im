@@ -1,0 +1,254 @@
+\hypertarget{classContext}{}\section{Context Class Reference}
+\label{classContext}\index{Context@{Context}}
+
+
+\hyperlink{classContext}{Context} of a connection.  
+
+
+
+
+{\ttfamily \#include $<$Context.\+h$>$}
+
+
+
+Collaboration diagram for Context\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=169pt]{classContext__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classContext_a0c72699560699b43eef88c14e3e71943}{set\+User} (const std\+::string \&\+\_\+user)
+\item 
+const std\+::string \& \hyperlink{classContext_ad6a061c8ed4681e09c25eb830c29d93c}{get\+User} () const 
+\item 
+void \hyperlink{classContext_a124207fc0f8ef54550ae923503c487c9}{add\+Bytes} (const char $\ast$bytes, int len)
+\begin{DoxyCompactList}\small\item\em Add received bytes from \hyperlink{classConn}{Conn} Protocal\+: $\vert$ Body\+: of any length $\vert$ Dilimiter $\vert$ Terminator $\vert$ Escaped text, \char`\"{}\$\$\char`\"{} for \char`\"{}\$\char`\"{} $\vert$ \char`\"{}\$\char`\"{} $\vert$ \textquotesingle{}. \end{DoxyCompactList}\item 
+bool \hyperlink{classContext_a66a69e531a5f60da65bfd895756ebff9}{is\+Avail} () const 
+\begin{DoxyCompactList}\small\item\em If there are available messages? \end{DoxyCompactList}\item 
+std\+::string \hyperlink{classContext_a0e965560cf9a1aaba46e24bb908f49be}{next} ()
+\begin{DoxyCompactList}\small\item\em Pop next message. \end{DoxyCompactList}\item 
+void \hyperlink{classContext_a110781d4d93d9ffb762a34a021218877}{send} (const std\+::string \&\+\_\+msg)
+\begin{DoxyCompactList}\small\item\em Send message. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \hyperlink{classContext_a732d579c381e6bcbc3d8899c8266f4d0}{add} (int \hyperlink{classContext_aaf11c36966be14b2e1e53ee43c8e91dd}{fd}, const char $\ast$\hyperlink{classContext_a3508ad395f4b0c7e61ad46b247307f50}{ip}, unsigned short \hyperlink{classContext_a68ab96bf75c30c3497312f95ace6de91}{port})
+\item 
+static void \hyperlink{classContext_ab5d0194f847307302b65a387515effb8}{del} (int \hyperlink{classContext_aaf11c36966be14b2e1e53ee43c8e91dd}{fd})
+\item 
+static \hyperlink{classContext}{Context} \& \hyperlink{classContext_ab985f83f8262651fd9df85ba1bcb47fe}{get\+By\+Fd} (int \hyperlink{classContext_aaf11c36966be14b2e1e53ee43c8e91dd}{fd})
+\item 
+static const std\+::vector$<$ \hyperlink{classContext}{Context} $\ast$ $>$ \& \hyperlink{classContext_adc40dec3fe28c127523cae55097a91ce}{get\+By\+User} (const std\+::string \&name)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const std\+::string \hyperlink{classContext_a3508ad395f4b0c7e61ad46b247307f50}{ip}
+\item 
+const unsigned short \hyperlink{classContext_a68ab96bf75c30c3497312f95ace6de91}{port}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classContext_a1f8fc23ba0333d55461a81555e368162}{Context} (int \+\_\+fd, const char $\ast$\+\_\+ip, unsigned short \+\_\+port)
+\item 
+\hyperlink{classContext_a2d34e4556448e40693f61d15e091b604}{$\sim$\+Context} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{classContext_a5f34f6e7fc17f613087021f52e2154f9}{escaping}
+\item 
+const int \hyperlink{classContext_aaf11c36966be14b2e1e53ee43c8e91dd}{fd}
+\item 
+std\+::string \hyperlink{classContext_a61817df359b6ed50d1a255648c80fd58}{buff}
+\begin{DoxyCompactList}\small\item\em File descriptor. \end{DoxyCompactList}\item 
+std\+::list$<$ std\+::string $>$ \hyperlink{classContext_a24115a22c1e187f610f41d9542b3516a}{msgs}
+\item 
+std\+::string \hyperlink{classContext_a8525c6ece0d6a53339ef8a59c1cfd668}{user}
+\begin{DoxyCompactList}\small\item\em List of received messages. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr char \hyperlink{classContext_a63a0ff9017aba4c0d9551900093ee057}{D\+I\+L\+I\+M\+I\+T\+ER} = \textquotesingle{}\$\textquotesingle{}
+\item 
+static constexpr char \hyperlink{classContext_a5a12ec226a7135dc356ab34745a3f5df}{T\+E\+R\+M\+I\+N\+A\+T\+OR} = \textquotesingle{}.\textquotesingle{}
+\item 
+static std\+::unordered\+\_\+map$<$ int, \hyperlink{classContext}{Context} $\ast$ $>$ \hyperlink{classContext_abab3c078973688455f584747769f14fe}{contexts}
+\item 
+static std\+::unordered\+\_\+map$<$ std\+::string, std\+::vector$<$ \hyperlink{classContext}{Context} $\ast$ $>$ $>$ \hyperlink{classContext_a73f2f8250661a88e254e49a266f6a705}{user\+Contexts}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classContext}{Context} of a connection. 
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Context@{Context}!Context@{Context}}
+\index{Context@{Context}!Context@{Context}}
+\subsubsection[{\texorpdfstring{Context(int \+\_\+fd, const char $\ast$\+\_\+ip, unsigned short \+\_\+port)}{Context(int _fd, const char *_ip, unsigned short _port)}}]{\setlength{\rightskip}{0pt plus 5cm}Context\+::\+Context (
+\begin{DoxyParamCaption}
+\item[{int}]{\+\_\+fd, }
+\item[{const char $\ast$}]{\+\_\+ip, }
+\item[{unsigned short}]{\+\_\+port}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classContext_a1f8fc23ba0333d55461a81555e368162}{}\label{classContext_a1f8fc23ba0333d55461a81555e368162}
+\index{Context@{Context}!````~Context@{$\sim$\+Context}}
+\index{````~Context@{$\sim$\+Context}!Context@{Context}}
+\subsubsection[{\texorpdfstring{$\sim$\+Context()}{~Context()}}]{\setlength{\rightskip}{0pt plus 5cm}Context\+::$\sim$\+Context (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classContext_a2d34e4556448e40693f61d15e091b604}{}\label{classContext_a2d34e4556448e40693f61d15e091b604}
+
+
+\subsection{Member Function Documentation}
+\index{Context@{Context}!add@{add}}
+\index{add@{add}!Context@{Context}}
+\subsubsection[{\texorpdfstring{add(int fd, const char $\ast$ip, unsigned short port)}{add(int fd, const char *ip, unsigned short port)}}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+::add (
+\begin{DoxyParamCaption}
+\item[{int}]{fd, }
+\item[{const char $\ast$}]{ip, }
+\item[{unsigned short}]{port}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classContext_a732d579c381e6bcbc3d8899c8266f4d0}{}\label{classContext_a732d579c381e6bcbc3d8899c8266f4d0}
+\index{Context@{Context}!add\+Bytes@{add\+Bytes}}
+\index{add\+Bytes@{add\+Bytes}!Context@{Context}}
+\subsubsection[{\texorpdfstring{add\+Bytes(const char $\ast$bytes, int len)}{addBytes(const char *bytes, int len)}}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+::add\+Bytes (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{bytes, }
+\item[{int}]{len}
+\end{DoxyParamCaption}
+)}\hypertarget{classContext_a124207fc0f8ef54550ae923503c487c9}{}\label{classContext_a124207fc0f8ef54550ae923503c487c9}
+
+
+Add received bytes from \hyperlink{classConn}{Conn} Protocal\+: $\vert$ Body\+: of any length $\vert$ Dilimiter $\vert$ Terminator $\vert$ Escaped text, \char`\"{}\$\$\char`\"{} for \char`\"{}\$\char`\"{} $\vert$ \char`\"{}\$\char`\"{} $\vert$ \textquotesingle{}. 
+
+\textquotesingle{} 
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \hyperlink{classInvalidMessage}{Invalid\+Message} \\
+\hline
+\end{DoxyExceptions}
+\index{Context@{Context}!del@{del}}
+\index{del@{del}!Context@{Context}}
+\subsubsection[{\texorpdfstring{del(int fd)}{del(int fd)}}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+::del (
+\begin{DoxyParamCaption}
+\item[{int}]{fd}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{classContext_ab5d0194f847307302b65a387515effb8}{}\label{classContext_ab5d0194f847307302b65a387515effb8}
+\index{Context@{Context}!get\+By\+Fd@{get\+By\+Fd}}
+\index{get\+By\+Fd@{get\+By\+Fd}!Context@{Context}}
+\subsubsection[{\texorpdfstring{get\+By\+Fd(int fd)}{getByFd(int fd)}}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf Context}\& Context\+::get\+By\+Fd (
+\begin{DoxyParamCaption}
+\item[{int}]{fd}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{classContext_ab985f83f8262651fd9df85ba1bcb47fe}{}\label{classContext_ab985f83f8262651fd9df85ba1bcb47fe}
+\index{Context@{Context}!get\+By\+User@{get\+By\+User}}
+\index{get\+By\+User@{get\+By\+User}!Context@{Context}}
+\subsubsection[{\texorpdfstring{get\+By\+User(const std\+::string \&name)}{getByUser(const std::string &name)}}]{\setlength{\rightskip}{0pt plus 5cm}static const std\+::vector$<${\bf Context}$\ast$$>$\& Context\+::get\+By\+User (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\hypertarget{classContext_adc40dec3fe28c127523cae55097a91ce}{}\label{classContext_adc40dec3fe28c127523cae55097a91ce}
+\index{Context@{Context}!get\+User@{get\+User}}
+\index{get\+User@{get\+User}!Context@{Context}}
+\subsubsection[{\texorpdfstring{get\+User() const }{getUser() const }}]{\setlength{\rightskip}{0pt plus 5cm}const std\+::string\& Context\+::get\+User (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classContext_ad6a061c8ed4681e09c25eb830c29d93c}{}\label{classContext_ad6a061c8ed4681e09c25eb830c29d93c}
+\index{Context@{Context}!is\+Avail@{is\+Avail}}
+\index{is\+Avail@{is\+Avail}!Context@{Context}}
+\subsubsection[{\texorpdfstring{is\+Avail() const }{isAvail() const }}]{\setlength{\rightskip}{0pt plus 5cm}bool Context\+::is\+Avail (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classContext_a66a69e531a5f60da65bfd895756ebff9}{}\label{classContext_a66a69e531a5f60da65bfd895756ebff9}
+
+
+If there are available messages? 
+
+\index{Context@{Context}!next@{next}}
+\index{next@{next}!Context@{Context}}
+\subsubsection[{\texorpdfstring{next()}{next()}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Context\+::next (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{classContext_a0e965560cf9a1aaba46e24bb908f49be}{}\label{classContext_a0e965560cf9a1aaba46e24bb908f49be}
+
+
+Pop next message. 
+
+\index{Context@{Context}!send@{send}}
+\index{send@{send}!Context@{Context}}
+\subsubsection[{\texorpdfstring{send(const std\+::string \&\+\_\+msg)}{send(const std::string &_msg)}}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+::send (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{\+\_\+msg}
+\end{DoxyParamCaption}
+)}\hypertarget{classContext_a110781d4d93d9ffb762a34a021218877}{}\label{classContext_a110781d4d93d9ffb762a34a021218877}
+
+
+Send message. 
+
+\index{Context@{Context}!set\+User@{set\+User}}
+\index{set\+User@{set\+User}!Context@{Context}}
+\subsubsection[{\texorpdfstring{set\+User(const std\+::string \&\+\_\+user)}{setUser(const std::string &_user)}}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+::set\+User (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{\+\_\+user}
+\end{DoxyParamCaption}
+)}\hypertarget{classContext_a0c72699560699b43eef88c14e3e71943}{}\label{classContext_a0c72699560699b43eef88c14e3e71943}
+
+
+\subsection{Member Data Documentation}
+\index{Context@{Context}!buff@{buff}}
+\index{buff@{buff}!Context@{Context}}
+\subsubsection[{\texorpdfstring{buff}{buff}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Context\+::buff\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classContext_a61817df359b6ed50d1a255648c80fd58}{}\label{classContext_a61817df359b6ed50d1a255648c80fd58}
+
+
+File descriptor. 
+
+\index{Context@{Context}!contexts@{contexts}}
+\index{contexts@{contexts}!Context@{Context}}
+\subsubsection[{\texorpdfstring{contexts}{contexts}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::unordered\+\_\+map$<$ int, {\bf Context} $\ast$ $>$ Context\+::contexts\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}\hypertarget{classContext_abab3c078973688455f584747769f14fe}{}\label{classContext_abab3c078973688455f584747769f14fe}
+\index{Context@{Context}!D\+I\+L\+I\+M\+I\+T\+ER@{D\+I\+L\+I\+M\+I\+T\+ER}}
+\index{D\+I\+L\+I\+M\+I\+T\+ER@{D\+I\+L\+I\+M\+I\+T\+ER}!Context@{Context}}
+\subsubsection[{\texorpdfstring{D\+I\+L\+I\+M\+I\+T\+ER}{DILIMITER}}]{\setlength{\rightskip}{0pt plus 5cm}constexpr char Context\+::\+D\+I\+L\+I\+M\+I\+T\+ER = \textquotesingle{}\$\textquotesingle{}\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}\hypertarget{classContext_a63a0ff9017aba4c0d9551900093ee057}{}\label{classContext_a63a0ff9017aba4c0d9551900093ee057}
+\index{Context@{Context}!escaping@{escaping}}
+\index{escaping@{escaping}!Context@{Context}}
+\subsubsection[{\texorpdfstring{escaping}{escaping}}]{\setlength{\rightskip}{0pt plus 5cm}bool Context\+::escaping\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classContext_a5f34f6e7fc17f613087021f52e2154f9}{}\label{classContext_a5f34f6e7fc17f613087021f52e2154f9}
+\index{Context@{Context}!fd@{fd}}
+\index{fd@{fd}!Context@{Context}}
+\subsubsection[{\texorpdfstring{fd}{fd}}]{\setlength{\rightskip}{0pt plus 5cm}const int Context\+::fd\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classContext_aaf11c36966be14b2e1e53ee43c8e91dd}{}\label{classContext_aaf11c36966be14b2e1e53ee43c8e91dd}
+\index{Context@{Context}!ip@{ip}}
+\index{ip@{ip}!Context@{Context}}
+\subsubsection[{\texorpdfstring{ip}{ip}}]{\setlength{\rightskip}{0pt plus 5cm}const std\+::string Context\+::ip}\hypertarget{classContext_a3508ad395f4b0c7e61ad46b247307f50}{}\label{classContext_a3508ad395f4b0c7e61ad46b247307f50}
+\index{Context@{Context}!msgs@{msgs}}
+\index{msgs@{msgs}!Context@{Context}}
+\subsubsection[{\texorpdfstring{msgs}{msgs}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::list$<$std\+::string$>$ Context\+::msgs\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classContext_a24115a22c1e187f610f41d9542b3516a}{}\label{classContext_a24115a22c1e187f610f41d9542b3516a}
+\index{Context@{Context}!port@{port}}
+\index{port@{port}!Context@{Context}}
+\subsubsection[{\texorpdfstring{port}{port}}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned short Context\+::port}\hypertarget{classContext_a68ab96bf75c30c3497312f95ace6de91}{}\label{classContext_a68ab96bf75c30c3497312f95ace6de91}
+\index{Context@{Context}!T\+E\+R\+M\+I\+N\+A\+T\+OR@{T\+E\+R\+M\+I\+N\+A\+T\+OR}}
+\index{T\+E\+R\+M\+I\+N\+A\+T\+OR@{T\+E\+R\+M\+I\+N\+A\+T\+OR}!Context@{Context}}
+\subsubsection[{\texorpdfstring{T\+E\+R\+M\+I\+N\+A\+T\+OR}{TERMINATOR}}]{\setlength{\rightskip}{0pt plus 5cm}constexpr char Context\+::\+T\+E\+R\+M\+I\+N\+A\+T\+OR = \textquotesingle{}.\textquotesingle{}\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}\hypertarget{classContext_a5a12ec226a7135dc356ab34745a3f5df}{}\label{classContext_a5a12ec226a7135dc356ab34745a3f5df}
+\index{Context@{Context}!user@{user}}
+\index{user@{user}!Context@{Context}}
+\subsubsection[{\texorpdfstring{user}{user}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Context\+::user\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classContext_a8525c6ece0d6a53339ef8a59c1cfd668}{}\label{classContext_a8525c6ece0d6a53339ef8a59c1cfd668}
+
+
+List of received messages. 
+
+\index{Context@{Context}!user\+Contexts@{user\+Contexts}}
+\index{user\+Contexts@{user\+Contexts}!Context@{Context}}
+\subsubsection[{\texorpdfstring{user\+Contexts}{userContexts}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::unordered\+\_\+map$<$ std\+::string, std\+::vector$<$ {\bf Context} $\ast$ $>$ $>$ Context\+::user\+Contexts\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}\hypertarget{classContext_a73f2f8250661a88e254e49a266f6a705}{}\label{classContext_a73f2f8250661a88e254e49a266f6a705}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{Context_8h}{Context.\+h}\item 
+\hyperlink{Context_8cpp}{Context.\+cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,147 @@
+\hypertarget{main_8cpp}{}\section{main.\+cpp File Reference}
+\label{main_8cpp}\index{main.\+cpp@{main.\+cpp}}
+{\ttfamily \#include $<$ctime$>$}\\*
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\\*
+{\ttfamily \#include \char`\"{}User.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Conn.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}config.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Context.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Message.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}3rd-\/party/json.\+hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}exception/\+Cmd\+Failed.\+h\char`\"{}}\\*
+Include dependency graph for main.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{main_8cpp__incl}
+\end{center}
+\end{figure}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \hyperlink{main_8cpp_af13a1979f9e8f62c101433fac6511cc6}{Json} = nlohmann\+::json
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{main_8cpp_ac8aa0cf225f36a1eb1139ff06036c725}{sign\+Up} (const std\+::string \&name, const std\+::string \&password)
+\begin{DoxyCompactList}\small\item\em Try to register (\char`\"{}register\char`\"{} is a C++ keyword) \end{DoxyCompactList}\item 
+void \hyperlink{main_8cpp_ac9db97369440a3088ab249e3d80201e9}{login} (const std\+::string \&name, const std\+::string \&password)
+\begin{DoxyCompactList}\small\item\em Try to login. \end{DoxyCompactList}\item 
+std\+::vector$<$ \hyperlink{structMessage}{Message} $>$ \hyperlink{main_8cpp_a8e27fd6ddf3965828c2c8c8a8a4b7233}{get\+Log\+Since} (const std\+::string \&name, time\+\_\+t since)
+\begin{DoxyCompactList}\small\item\em Get messages since a timestamp. \end{DoxyCompactList}\item 
+const std\+::vector$<$ std\+::string $>$ \& \hyperlink{main_8cpp_a5866776cea9a1acfa23285185e91dd34}{upd\+Contact} (const std\+::string \&my\+Name, const std\+::string \&op, const std\+::string \&name)
+\begin{DoxyCompactList}\small\item\em Update contacts of user {\ttfamily my\+Name} \end{DoxyCompactList}\item 
+int \hyperlink{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main} ()
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+std\+::unordered\+\_\+map$<$ std\+::string, \hyperlink{structUser}{User} $>$ \hyperlink{main_8cpp_aa46ebcccaa00a5a83a513bc0e2edb1e2}{users}
+\item 
+std\+::unordered\+\_\+map$<$ std\+::string, std\+::string $>$ \hyperlink{main_8cpp_a551b85ea30a9afeb6c88cfb58ecb3b29}{profiles}
+\item 
+std\+::vector$<$ \hyperlink{structMessage}{Message} $>$ \hyperlink{main_8cpp_a80da17149a00a414bb75d88c22998255}{messages}
+\end{DoxyCompactItemize}
+
+
+\subsection{Typedef Documentation}
+\index{main.\+cpp@{main.\+cpp}!Json@{Json}}
+\index{Json@{Json}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{\texorpdfstring{Json}{Json}}]{\setlength{\rightskip}{0pt plus 5cm}using {\bf Json} =  nlohmann\+::json}\hypertarget{main_8cpp_af13a1979f9e8f62c101433fac6511cc6}{}\label{main_8cpp_af13a1979f9e8f62c101433fac6511cc6}
+
+
+\subsection{Function Documentation}
+\index{main.\+cpp@{main.\+cpp}!get\+Log\+Since@{get\+Log\+Since}}
+\index{get\+Log\+Since@{get\+Log\+Since}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{\texorpdfstring{get\+Log\+Since(const std\+::string \&name, time\+\_\+t since)}{getLogSince(const std::string &name, time_t since)}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<${\bf Message}$>$ get\+Log\+Since (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{name, }
+\item[{time\+\_\+t}]{since}
+\end{DoxyParamCaption}
+)}\hypertarget{main_8cpp_a8e27fd6ddf3965828c2c8c8a8a4b7233}{}\label{main_8cpp_a8e27fd6ddf3965828c2c8c8a8a4b7233}
+
+
+Get messages since a timestamp. 
+
+\begin{DoxyReturn}{Returns}
+M\+A\+X\+\_\+\+L\+O\+G\+\_\+\+N\+UM logs at maximum, except that there are same timestamps 
+\end{DoxyReturn}
+\index{main.\+cpp@{main.\+cpp}!login@{login}}
+\index{login@{login}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{\texorpdfstring{login(const std\+::string \&name, const std\+::string \&password)}{login(const std::string &name, const std::string &password)}}]{\setlength{\rightskip}{0pt plus 5cm}void login (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{name, }
+\item[{const std\+::string \&}]{password}
+\end{DoxyParamCaption}
+)}\hypertarget{main_8cpp_ac9db97369440a3088ab249e3d80201e9}{}\label{main_8cpp_ac9db97369440a3088ab249e3d80201e9}
+
+
+Try to login. 
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \hyperlink{classCmdFailed}{Cmd\+Failed} \\
+\hline
+\end{DoxyExceptions}
+\index{main.\+cpp@{main.\+cpp}!main@{main}}
+\index{main@{main}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{\texorpdfstring{main()}{main()}}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{}\label{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}
+\index{main.\+cpp@{main.\+cpp}!sign\+Up@{sign\+Up}}
+\index{sign\+Up@{sign\+Up}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{\texorpdfstring{sign\+Up(const std\+::string \&name, const std\+::string \&password)}{signUp(const std::string &name, const std::string &password)}}]{\setlength{\rightskip}{0pt plus 5cm}void sign\+Up (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{name, }
+\item[{const std\+::string \&}]{password}
+\end{DoxyParamCaption}
+)}\hypertarget{main_8cpp_ac8aa0cf225f36a1eb1139ff06036c725}{}\label{main_8cpp_ac8aa0cf225f36a1eb1139ff06036c725}
+
+
+Try to register (\char`\"{}register\char`\"{} is a C++ keyword) 
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \hyperlink{classCmdFailed}{Cmd\+Failed} \\
+\hline
+\end{DoxyExceptions}
+\index{main.\+cpp@{main.\+cpp}!upd\+Contact@{upd\+Contact}}
+\index{upd\+Contact@{upd\+Contact}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{\texorpdfstring{upd\+Contact(const std\+::string \&my\+Name, const std\+::string \&op, const std\+::string \&name)}{updContact(const std::string &myName, const std::string &op, const std::string &name)}}]{\setlength{\rightskip}{0pt plus 5cm}const std\+::vector$<$std\+::string$>$\& upd\+Contact (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{my\+Name, }
+\item[{const std\+::string \&}]{op, }
+\item[{const std\+::string \&}]{name}
+\end{DoxyParamCaption}
+)}\hypertarget{main_8cpp_a5866776cea9a1acfa23285185e91dd34}{}\label{main_8cpp_a5866776cea9a1acfa23285185e91dd34}
+
+
+Update contacts of user {\ttfamily my\+Name} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em op} & \+: \char`\"{}add\char`\"{} or \char`\"{}del\char`\"{} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\+: Updated contacts 
+\end{DoxyReturn}
+
+
+\subsection{Variable Documentation}
+\index{main.\+cpp@{main.\+cpp}!messages@{messages}}
+\index{messages@{messages}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{\texorpdfstring{messages}{messages}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<${\bf Message}$>$ messages}\hypertarget{main_8cpp_a80da17149a00a414bb75d88c22998255}{}\label{main_8cpp_a80da17149a00a414bb75d88c22998255}
+\index{main.\+cpp@{main.\+cpp}!profiles@{profiles}}
+\index{profiles@{profiles}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{\texorpdfstring{profiles}{profiles}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::unordered\+\_\+map$<$std\+::string, std\+::string$>$ profiles}\hypertarget{main_8cpp_a551b85ea30a9afeb6c88cfb58ecb3b29}{}\label{main_8cpp_a551b85ea30a9afeb6c88cfb58ecb3b29}
+\index{main.\+cpp@{main.\+cpp}!users@{users}}
+\index{users@{users}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{\texorpdfstring{users}{users}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::unordered\+\_\+map$<$std\+::string, {\bf User}$>$ users}\hypertarget{main_8cpp_aa46ebcccaa00a5a83a513bc0e2edb1e2}{}\label{main_8cpp_aa46ebcccaa00a5a83a513bc0e2edb1e2}
