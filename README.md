@@ -1,6 +1,8 @@
 # IM
 A simple client/server Instant Messaging application
 
+Copyright © Tang Shizhi
+
 # Build & Run
 
 This software consists of two parts: the server and the client. The server only runs at Linux, and the client can run at Windows, Linux or Mac OS.
